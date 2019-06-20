@@ -1,0 +1,17 @@
+1. model
+2. /guestbook/deleteform/10(pathvariable)
+   path('helloworld/hello2/<int:id>', helloworld.views.hello2),
+
+3. orm method
+index(list) -> ok
+add         -> ok
+delete
+1) repository에서 객체 영속화
+    guestbook = Guestbook.objects.filter(id=20).filter(password='123')
+    guestbook.delete()
+
+
+[구현 X]
+list.html 템플릿에서
+1. 메시지 index 접는 것 X (django template arithmetic operation)
+2. 메시지 개행문자 <br> 처리 X

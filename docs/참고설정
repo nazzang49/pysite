@@ -1,0 +1,84 @@
+[mysite >> pysite]
+
+# 기본적으로 장고 프로젝트와 DB는 1:1 갯수 관계
+
+- postgresql에 db 생성 및 계정 생성, 접근 권한 부여
+1) create database pysite;
+
+2) create user pysite with password 'pysite';
+
+3) grant all privileges on all tables in schema public to pysite;
+
+4) data/pg_hba.conf 설정
+
+- 파이참에서 장고 프로젝트 시작
+1) 프로젝트 생성
+
+2) 장고 설치
+    [터미널] pip install django
+
+3) 장고 프로젝트 생성
+    [터미널] django-admin startproject pysite
+
+4) 디렉토리 정리
+    - 파이참 프로젝트와 장고 프로젝트의 디렉토리 통일(python_ch3)
+        - manager.py를 최상위로 이동
+        - 그 외 내부 설정 파일들을 한 단계 위로 이동
+
+5) psycopg2 라이브러리 설치(DB)
+    [터미널]pip install psycopg2
+
+6) settings.py 설정
+    - TIME_ZONE = 'Asia/Seoul'
+    - DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': 'pysite',
+                'USER': 'pysite',
+                'PASSWORD': 'pysite',
+                'HOST' : '192.168.1.33',
+                'PORT' : 5432
+            }
+        }
+    - 템플릿 디렉토리 설정
+    'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    python_ch3
+        |
+        |------- templates 생성
+    - static 디렉토리 설정 및 url 매핑(settings.py)
+        - STATICFILES_DIRS = (os.path.join(BASE_DIR, 'statics'),)
+        - STATIC_URL = '/assets/'
+
+7) 장고 프로젝트 기본 관리 어플리케이션이 사용하는 테이블 생성(** 중요 **)
+    [터미널]python manage.py migrate
+
+8) 장고 프로젝트 기본 관리 어플리케이션 로그인 계정 생성
+    (관리 계정 생성)
+    [터미널] python manage.py createsuperuser
+
+9) 현재까지 작업 내용 확인
+    [터미널] python manage.py runserver 0.0.0.0:8888
+
+10) Application 작업
+    1) main
+        - 어플리케이션 추가
+            [터미널] python manage.py startapp main
+        - 어플리케이션 등록
+            - settings.py에 installed apps
+        - templates 디렉토리 내 어플리케이션 디렉토리 생성
+        - 모델 정의 생략
+        - urls.py에서 url-view handler 매핑
+        - views.py에서 handler 함수 구현(요청 처리, 모델 작업, 응답 반환 등)
+        - if 화면 필요 시, 해당 templates 작업
+
+    2) user
+        - 어플리케이션 추가
+            [터미널] python manage.py startapp user
+        - 어플리케이션 등록
+            - settings.py에 installed apps
+        - templates 디렉토리 내 어플리케이션 디렉토리 생성
+        - 모델 정의
+            -
+        - urls.py에서 url-view handler 매핑
+        - views.py에서 handler 함수 구현(요청 처리, 모델 작업, 응답 반환 등)
+        - if 화면 필요 시, 해당 templates 작업
