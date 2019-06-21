@@ -27,8 +27,9 @@ urlpatterns = [
     path('user/joinform', user.views.joinform),
     path('user/joinsuccess', user.views.joinsuccess),
     path('user/join', user.views.join),
+    path('user/loginform', user.views.loginform),
     path('guestbook/', guestbook.views.list),
     path('guestbook/add', guestbook.views.add),
     path('guestbook/deleteform/<int:id>', guestbook.views.deleteform),
-    path('guestbook/delete', guestbook.views.delete),
+    path('guestbook/delete', guestbook.views.delete)
 ]

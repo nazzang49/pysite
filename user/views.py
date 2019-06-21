@@ -22,3 +22,6 @@ def join(request):
     user.save()
     # redirect
     return HttpResponseRedirect('/user/joinsuccess')
+
+def loginform(request):
+    return render(request,'user/loginform.html')
