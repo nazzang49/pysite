@@ -32,8 +32,14 @@
 						<td>{{board.user.name}}</td>
 						<td>{{board.hit}}</td>
 						<td>{{board.regdate | date:'Y-m-d:H:i:s'}}</td>
-						<td><a href="/board/delete?groupno={{board.groupno}}&orderno={{board.orderno}}&depth={{board.depth}}" class="del">
-							삭제</a></td>
+						<td>
+							{% if request.session.authuser.name == board.user.name %}
+							<a href="/board/delete?groupno={{board.groupno}}&orderno={{board.orderno}}&depth={{board.depth}}" class="del">
+							삭제</a>
+							{% else %}
+							<p>삭제 불가</p>
+							{% endif %}
+						</td>
 					</tr>
 					{%endfor%}
 				</table>
