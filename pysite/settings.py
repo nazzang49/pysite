@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'main',
     'user',
+    'board',
     'mathfilters',
     'guestbook',
     'django.contrib.admin',
@@ -127,3 +128,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'statics'),)
 STATIC_URL = '/assets/'
+
+# 세션
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True

@@ -1,0 +1,20 @@
+1. limit 처리 by slicing
+startRow
+pageSize
+Board.objects.all().order_by('-regdate')[startRow-1:pageSize]
+
+2. insert
+board = Board()
+board.title = ''
+board.user_id = 세션값
+board.save()
+
+3. hit 증가
+board = Board()
+board.hit = board.hit+1
+board.save()
+
+4. TotalCount 구하기
+Board.objects.count()
+
+

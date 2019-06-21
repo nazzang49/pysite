@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 # 모듈 생성
+import board.views
 import guestbook.views
 import main.views
 import user.views
@@ -24,12 +25,29 @@ import user.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main.views.index),
+
     path('user/joinform', user.views.joinform),
     path('user/joinsuccess', user.views.joinsuccess),
     path('user/join', user.views.join),
     path('user/loginform', user.views.loginform),
+    path('user/login', user.views.login),
+    path('user/logout', user.views.logout),
+    path('user/updateform', user.views.updateform),
+    path('user/update', user.views.update),
+    path('user/api/checkemail', user.views.checkemail),
+
     path('guestbook/', guestbook.views.list),
     path('guestbook/add', guestbook.views.add),
     path('guestbook/deleteform/<int:id>', guestbook.views.deleteform),
-    path('guestbook/delete', guestbook.views.delete)
+    path('guestbook/delete', guestbook.views.delete),
+
+    path('board/<int:pagenum>', board.views.list),
+    path('board/write', board.views.write),
+    path('board/write_one', board.views.write_one),
+    path('board/view', board.views.view),
+    path('board/modify', board.views.modify),
+    path('board/modify_one', board.views.modify_one),
+    path('board/rewrite', board.views.rewrite),
+    path('board/rewrite_one', board.views.rewrite_one),
+    path('board/delete', board.views.delete),
 ]
