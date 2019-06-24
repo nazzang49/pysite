@@ -59,11 +59,11 @@ input#kwd	{
 }
 
 .board-form .tbl-ex td {
-	text-align:left
+	text-align:center;
 }
 
 .board-form .tbl-ex td.label {
-	text-align:right;
+	text-align:center;
 	font-weight:bold;
 	width:60px; 
 }
@@ -117,6 +117,17 @@ a#new-book	 {
 	background-color:#E8ECF6; 
 	color:#111;
 	cursor: pointer	
+}
+
+#delete, #comment-submit{
+	float:right;
+	padding:5px;
+	margin:5px;
+	border:1px solid #555;
+	font-weight:bold;
+	background-color:white;
+	color:#111;
+	cursor: pointer
 }
 
 .board-form .bottom a {

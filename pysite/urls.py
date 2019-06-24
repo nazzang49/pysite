@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main.views.index),
 
+    # 회원
     path('user/joinform', user.views.joinform),
     path('user/joinsuccess', user.views.joinsuccess),
     path('user/join', user.views.join),
@@ -36,12 +37,14 @@ urlpatterns = [
     path('user/update', user.views.update),
     path('user/api/checkemail', user.views.checkemail),
 
+    # 방명록
     path('guestbook/', guestbook.views.list),
     path('guestbook/add', guestbook.views.add),
     path('guestbook/deleteform/<int:id>', guestbook.views.deleteform),
     path('guestbook/delete', guestbook.views.delete),
 
-    path('board/<int:pagenum>', board.views.list),
+    # 게시판
+    path('board/', board.views.list),
     path('board/write', board.views.write),
     path('board/write_one', board.views.write_one),
     path('board/view', board.views.view),
@@ -50,4 +53,5 @@ urlpatterns = [
     path('board/rewrite', board.views.rewrite),
     path('board/rewrite_one', board.views.rewrite_one),
     path('board/delete', board.views.delete),
+    path('board/comment', board.views.comment),
 ]

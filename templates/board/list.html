@@ -7,7 +7,9 @@
 
 {% block content%}
 			<div id="board">
-				<form id="search_form" action="" method="post">
+				<!-- 제목 검색 -->
+				<form id="search_form" action="/board" method="get">
+					{%csrf_token%}
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -27,7 +29,7 @@
 							{% if board.depth > 1 %}
 							<img src="/assets/images/reply.png">
 							{% endif %}
-							<a href="/board/view?id={{board.id}}">{{board.title}}</a>
+							<a href="/board/view?id={{board.id}}&pagenum={{pagenum}}&kwd={{kwd}}">{{board.title}}</a>
 						</td>
 						<td>{{board.user.name}}</td>
 						<td>{{board.hit}}</td>
@@ -46,14 +48,14 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li>{% if startpage > pageblock %}<a href="/board/{{startpage | sub:pageblock}}">◀</a>{% endif %}
+						<li>{% if startpage > pageblock %}<a href="/board?pagenum={{startpage | sub:pageblock}}&kwd={{kwd | urlencode}}">◀</a>{% endif %}
 						</li>
 						<li>
 							{% for i in starttoend %}
-							<a href="/board/{{i}}">{{i}}</a>
+							<a href="/board?pagenum={{i}}&kwd={{kwd | urlencode}}">{{i}}</a>
 							{% endfor %}
 						</li>
-						<li>{% if endpage < pagecount %}<a href="/board/{{startpage | add:pageblock}}">▶</a>{% endif %}</li>
+						<li>{% if endpage < pagecount %}<a href="/board?pagenum={{startpage | add:pageblock}}&kwd={{kwd | urlencode}}">▶</a>{% endif %}</li>
 					</ul>
 				</div>
 				<!-- pager 추가 -->

@@ -1,17 +1,24 @@
 from django.db.models import Max, F
-from django.http import HttpResponseRedirect
+from django.forms import model_to_dict
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-from board.models import Board
+from board.models import Board, Comment
 
-def list(requst, pagenum=1):
+def list(request):
+    # 페이지 번호, 디폴트 = 1페이지
+    pagenum = int(request.GET.get('pagenum',1))
+    # 검색어, 디폴트 = 공백(전체 게시물)
+    kwd = str(request.GET.get('kwd',''))
+
     # 페이징 처리
     currentpage = pagenum
     pagesize = 5
     pageblock = 3
     startrow = (currentpage-1)*pagesize+1
-    count = Board.objects.count()
+    # 검색 필터
+    count = Board.objects.filter(title__contains=kwd).count()
 
     pagecount = count // pagesize
     if count % pagesize != 0:
@@ -24,24 +31,38 @@ def list(requst, pagenum=1):
 
     starttoend = range(startpage,endpage+1)
 
-    # 게시물 리스트
-    boardlist = Board.objects.all().order_by('-groupno','orderno')[startrow-1:startrow-1+pagesize]
+    # 게시물 리스트 + 검색 필터
+    boardlist = Board.objects.all().filter(title__contains=kwd).order_by('-groupno','orderno')[startrow-1:startrow-1+pagesize]
     data = {
         'startpage':startpage,
         'endpage':endpage,
         'pageblock':pageblock,
         'pagecount':pagecount,
         'boardlist':boardlist,
-        'starttoend':starttoend
+        'starttoend':starttoend,
+        'pagenum':pagenum,
+        'kwd':kwd
     }
 
-    return render(requst, 'board/list.html', data)
+    return render(request, 'board/list.html', data)
 
 def write(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     return render(request, 'board/write.html')
 
 # 대표 게시물
 def write_one(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     board = Board()
     board.title = request.POST['title']
     board.content = request.POST['content']
@@ -55,19 +76,36 @@ def write_one(request):
     board.save()
 
     # 기본 1페이지로 이동
-    return HttpResponseRedirect('/board/1')
+    return HttpResponseRedirect('/board')
 
+# 게시물 보기 + 댓글 등록 및 리스트 추출
 def view(request):
     # 특정 게시물 정보 호출
     Board.objects.filter(id=request.GET['id']).update(hit=F('hit')+1)
     board = Board.objects.get(id=request.GET['id'])
+
+    pagenum = int(request.GET.get('pagenum',1))
+    kwd = str(request.GET.get('kwd', ''))
+
+    # 댓글 리스트
+    commentlist = Comment.objects.all().filter(board_id=request.GET['id'])
+
     data = {
-        'board':board
+        'board':board,
+        'commentlist':commentlist,
+        'pagenum':pagenum,
+        'kwd': kwd
     }
     return render(request, 'board/view.html', data)
 
 # 글 수정 페이지 이동
 def modify(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     board = Board.objects.get(id=request.GET['id'])
     data = {
         'board': board
@@ -76,17 +114,36 @@ def modify(request):
 
 # 글 수정
 def modify_one(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     Board.objects.filter(id=request.POST['id']).update(title=request.POST['title'], content=request.POST['content'])
     return HttpResponseRedirect('/board/modify?id='+request.POST['id'])
 
 # 답글 작성 페이지 이동 = 기존 write
 def rewrite(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     data = {
         'id':request.GET['id']
     }
     return render(request, 'board/rewrite.html', data)
 
+# 답글 작성
 def rewrite_one(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     board = Board()
     board.title = request.POST['title']
     board.content = request.POST['content']
@@ -101,9 +158,16 @@ def rewrite_one(request):
     board.depth = parent.depth+1
     board.user_id = request.session['authuser']['id']
     board.save()
-    return HttpResponseRedirect('/board/1')
+    return HttpResponseRedirect('/board')
 
+# 글 삭제
 def delete(request):
+
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
+
     boardlist = Board.objects.all().filter(groupno=request.GET['groupno']).filter(orderno__gte=request.GET['orderno']).filter(depth__gte=request.GET['depth']).order_by('orderno','depth')
     maxorderno = 1
     # 가장 최상위 글이 아닌 경우
@@ -131,32 +195,42 @@ def delete(request):
         if board.orderno <= maxorderno:
             board.delete()
 
-    return HttpResponseRedirect('/board/1')
+    return HttpResponseRedirect('/board')
 
+# 댓글 등록
+def comment(request):
 
+    # 인증
+    authuser = request.session['authuser']
+    if authuser is None:
+        return HttpResponseRedirect('/board')
 
+    comment = Comment()
+    comment.content = request.GET['content']
+    comment.board_id = request.GET['boardid']
+    comment.user_id = authuser['id']
+    comment.save()
 
+    # 댓글 리스트 추출
+    commentlist = Comment.objects.all().filter(board_id=request.GET['boardid'])
 
+    id = []
+    content = []
+    regdate = []
+    user = []
+    for c in commentlist:
+        id.append(c.id)
+        content.append(c.content)
+        regdate.append(c.regdate)
+        user.append(c.user.name)
 
+    result={
+        'result':'success',
+        'id':id,
+        'content':content,
+        'regdate':regdate,
+        'user':user,
+        'nowuser':request.session['authuser']['name']
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return JsonResponse(result)

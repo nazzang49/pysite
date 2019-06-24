@@ -3,6 +3,63 @@
 
 {% block css_link%}
 <link href="/assets/css/board.css" rel="stylesheet" type="text/css">
+<script src="/assets/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript">
+	$(function(){
+		//댓글 입력
+		$('#comment-submit').on('click', function(){
+			var content = $('#comment-content').val();
+			var boardid = {{board.id}}
+			$.ajax({
+				url:'/board/comment?content='+content+'&boardid='+boardid,
+				type:'get',
+				dataType:'json',
+				success:function(response){
+					if(response.result!='success'){
+						alert('댓글 입력 실패');
+						$('#comment-content').val('');
+						$('#comment-content').focus();
+						return;
+					}
+					var commentid = response.id;
+					var commentcontent = response.content;
+					var commentregdate = response.regdate;
+					var commentuser = response.user;
+
+					//갱신된 댓글 리스트 출력
+					var htmls = '<tr>';
+						htmls += '<th colspan="4">댓글 목록</th>';
+						htmls += '</tr>';
+						htmls += '<tr>';
+						htmls += '<td class="label">작성자</td>';
+						htmls += '<td class="label">내용</td>';
+						htmls += '<td class="label">작성일</td>';
+						htmls += '<td class="label">삭제</td>';
+						htmls += '</tr>';
+
+						for(var i=0;i<commentid.length;i++){
+							htmls += '<tr>';
+							htmls += '<td class="new">'+commentuser[i]+'</td>';
+							htmls += '<td class="new">'+commentcontent[i]+'</td>';
+							htmls += '<td class="new">'+commentregdate[i]+'</td>';
+							htmls += '<td>';
+							htmls += '<input type="hidden" value="{{comment.id }}" id="commentid">';
+							if(response.nowuser == commentuser[i]){
+								htmls += '<button id="delete" onclick="delete()">삭제</button>';
+							}else{
+								htmls += '<p style="text-align: center;">변경불가</p>';
+							}
+							htmls += '</td>';
+							htmls += '</tr>';
+						}
+					$('#tbl-comment').html(htmls);
+					return;
+				}
+			});
+		});
+	});
+
+</script>
 {% endblock %}
 
 {% block content %}
@@ -25,13 +82,59 @@
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="/board/1">글목록</a>
+					<a href="/board?pagenum={{pagenum}}&kwd={{kwd}}">글목록</a>
 					{% if request.session.authuser.name == board.user.name %}
 					<a href="/board/modify?id={{board.id}}">글수정</a>
 					{% endif %}
 					{% if request.session.authuser is not None %}
 					<a href="/board/rewrite?id={{board.id}}">답글쓰기</a>
 					{% endif %}
+				</div>
+				<!-- 댓글 -->
+				<div id="comment">
+					{% if request.session.authuser is not None %}
+					<table class="tbl-ex">
+							<tr>
+								<th colspan="3">댓글 입력</th>
+							</tr>
+							<tr>
+								<td class="label" style="width:20%;">{{request.session.authuser.name }}</td>
+								<td class="label" style="width:80%;">
+								<input type="text" id="comment-content" name="comment-content">
+								<button id="comment-submit">입력</button>
+								</td>
+							</tr>
+					</table>
+					{% endif %}
+
+					<!-- 댓글 목록 -->
+					<table class="tbl-ex" id="tbl-comment">
+						<tr>
+							<th colspan="4">댓글 목록</th>
+						</tr>
+						<tr>
+							<td class="label">작성자</td>
+							<td class="label">내용</td>
+							<td class="label">작성일</td>
+							<td class="label">삭제</td>
+						</tr>
+						{% for comment in commentlist %}
+						<tr>
+							<td class="new">{{comment.user.name }}</td>
+							<td class="new">{{comment.content }}</td>
+							<td class="new">{{comment.regdate | date:'Y-m-d:H:i:s' }}</td>
+							<td>
+							<input type="hidden" value="{{comment.id }}" id="commentid">
+								<!-- 본인 댓글만 삭제 가능 -->
+								{% if request.session.authuser.name == comment.user.name %}
+								<button id="delete" onclick="delete()">삭제</button>
+								{% else %}
+								<p style="text-align: center;">변경불가</p>
+								{% endif %}
+							</td>
+						</tr>
+						{% endfor %}
+					</table>
 				</div>
 			</div>
 {% endblock %}
