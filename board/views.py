@@ -1,5 +1,4 @@
 from django.db.models import Max, F
-from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 
@@ -49,7 +48,7 @@ def list(request):
 def write(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -59,7 +58,7 @@ def write(request):
 def write_one(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -102,7 +101,7 @@ def view(request):
 def modify(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -116,7 +115,7 @@ def modify(request):
 def modify_one(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -127,7 +126,7 @@ def modify_one(request):
 def rewrite(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -140,7 +139,7 @@ def rewrite(request):
 def rewrite_one(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -164,7 +163,7 @@ def rewrite_one(request):
 def delete(request):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
@@ -197,19 +196,25 @@ def delete(request):
 
     return HttpResponseRedirect('/board')
 
-# 댓글 등록
-def comment(request):
+# 댓글 입력 및 삭제
+def comment(request, commentid):
 
     # 인증
-    authuser = request.session['authuser']
+    authuser = request.session.get('authuser')
     if authuser is None:
         return HttpResponseRedirect('/board')
 
-    comment = Comment()
-    comment.content = request.GET['content']
-    comment.board_id = request.GET['boardid']
-    comment.user_id = authuser['id']
-    comment.save()
+    # 댓글 입력
+    if commentid is None:
+        comment = Comment()
+        comment.content = request.GET['content']
+        comment.board_id = request.GET['boardid']
+        comment.user_id = authuser['id']
+        comment.save()
+    # 댓글 삭제
+    else:
+        comment = Comment.objects.get(id=commentid)
+        comment.delete()
 
     # 댓글 리스트 추출
     commentlist = Comment.objects.all().filter(board_id=request.GET['boardid'])
@@ -224,6 +229,7 @@ def comment(request):
         regdate.append(c.regdate)
         user.append(c.user.name)
 
+    # json 형태인 dict 자료형으로 리턴
     result={
         'result':'success',
         'id':id,
@@ -234,3 +240,11 @@ def comment(request):
     }
 
     return JsonResponse(result)
+
+# get, post action 동시 처리
+# def test(request, id):
+#     if id is None:
+#         print("get")
+#     else:
+#         print("post")
+#     pass

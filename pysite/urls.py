@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 
 # 모듈 생성
 import board.views
@@ -53,5 +53,6 @@ urlpatterns = [
     path('board/rewrite', board.views.rewrite),
     path('board/rewrite_one', board.views.rewrite_one),
     path('board/delete', board.views.delete),
-    path('board/comment', board.views.comment),
+    # re_path test(get, post 동시 처리)
+    re_path(r'^board/comment(?:/(?P<commentid>\d+))?/$', board.views.comment)
 ]
