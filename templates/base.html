@@ -1,40 +1,50 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ko-kr">
 <head>
-<title>mysite</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-    {%block css_link%}{%endblock%}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JAY PARK</title>
+	{%block css_link%}{%endblock%}
 </head>
 <body>
-	<div id="container">
-		<div id="header">
-			<h1 onclick="location.href='/'">MySite</h1>
-			<ul>
-				{% if request.session.authuser is None%}
-				<li><a href="/user/loginform">로그인</a></li>
-				<li><a href="/user/joinform">회원가입</a></li>
-				{% else %}
-				<li><a href="/user/updateform">회원정보수정</a></li>
-				<li><a href="/user/logout">로그아웃</a></li>
-				<li>{{request.session.authuser.name}}님 반갑습니다.</li>
-				{%endif%}
-			</ul>
-		</div>
-		<div id="wrapper">
-			<div id="content">
-                {%block content%}{%endblock%}
-			</div>
-		</div>
-		<div id="navigation">
-			<ul>
-				<li><a href="/">박진영</a></li>
-				<li><a href="/guestbook">방명록</a></li>
-				<li><a href="/board">게시판</a></li>
-			</ul>
-		</div>
-		<div id="footer">
-			<p>(c)opyright 2015, 2016, 2017, 2018, 2019</p>
-		</div>
+	<div class="container">
+		<header>
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a class="nav-a" id="nav-intro" href="/">메인</a></li>
+                        <li><a class="nav-a" id="nav-guestbook" href="/guestbook">방명록</a></li>
+                        <li><a class="nav-a" id="nav-board" href="/board">게시판</a></li>
+                        <li><a class="nav-a" id="nav-gallery" href="#">갤러리</a></li>
+                    </ul>
+                    <!-- 회원정보 -->
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if request.session.authuser is None%}
+                        <li><a class="nav-a" id="nav-join" href="/user/joinform">회원가입</a></li>
+                        <li><a class="nav-a" id="nav-login" href="/user/loginform">로그인</a></li>
+                        {% else %}
+                        <li><a class="nav-a" id="nav-logout" href="/user/logout">로그아웃</a></li>
+                        <li><a class="nav-a" id="nav-mypage" href="/user/updateform">{{request.session.authuser.name}}님의 마이페이지</a></li>
+                        {% endif %}
+                    </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+		</header>
+        {%block content%}{%endblock%}
+		<footer>
+		</footer>
 	</div>
 </body>
 </html>

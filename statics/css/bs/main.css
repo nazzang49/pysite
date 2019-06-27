@@ -1,0 +1,6 @@
+/*main*/
+div.row             {position:relative; width:70%; height:850px; background:url('http://localhost:9999/assets/images/logo.jpg') no-repeat; background-size:100% 850px; text-align:center;
+                     margin:0 auto;}
+div.row span        {line-height:400px; text-align:center; color:white; font-size:50px; font-family:'Passion One', sans-serif; font-style:italic; letter-spacing:25px;}
+div.row small       {color:white;}
+.btn-default        {position:absolute; bottom:20px; right:20px;}

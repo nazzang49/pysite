@@ -95,7 +95,7 @@
 							htmls += '<td class="new">'+commentregdate[i]+'</td>';
 							htmls += '<td>';
 							if(response.nowuser == commentuser[i]){
-								htmls += '<button id="delete">삭제</button>';
+								htmls += '<button class="delete-comment" value="'+commentid[i]+'">삭제</button>';
 							}else{
 								htmls += '<p style="text-align: center;">변경불가</p>';
 							}

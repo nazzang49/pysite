@@ -1,0 +1,24 @@
+{% extends '../../base.html' %}
+
+{% block css_link %}
+<link href="http://localhost:9999/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/font-nanumgothic.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/header.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/login.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Cutive+Mono|Rubik+Mono+One|Noto+Sans+KR|Lobster|Poiret+One|Passion+One&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <div id="content-form">
+            <form class="form-signin" method="POST" action="/user/login">{%csrf_token%}
+                <h2 class="form-signin-heading">로그인</h2>
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email address" required autofocus>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

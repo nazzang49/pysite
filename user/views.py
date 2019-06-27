@@ -28,7 +28,7 @@ def join(request):
 
 # 로그인 페이지 이동
 def loginform(request):
-    return render(request,'user/loginform.html')
+    return render(request,'_bs/user/loginform.html')
 
 # 로그인 + 세션 처리
 def login(request):
