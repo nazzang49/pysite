@@ -1,0 +1,93 @@
+{% extends '../../base.html' %}
+
+{% block css_link %}
+<link href="http://localhost:9999/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/font-nanumgothic.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/header.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/join.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Cutive+Mono|Rubik+Mono+One|Noto+Sans+KR|Lobster|Poiret+One|Passion+One&display=swap" rel="stylesheet">
+<script src="/assets/js/jquery/jquery-1.9.0.js"></script>
+<script>
+	$(function(){
+		$('#inputEmail').change(function(){
+			$('#img-email').hide();
+			$('#email-check').show();
+		});
+
+		$('#email-check').click(function(){
+			var email = $('#inputEmail').val();
+			if(email == ''){
+				return;
+			}
+			$.ajax({
+				url:'/user/api/checkemail?email='+email,
+				type:'get',
+				dataType:'json',
+				success: function(response){
+					if(response.result!='success'){
+						console.error(response.data);
+					}
+					if(response.data=='exist'){
+						alert('[이메일 중복] 재입력 필수');
+						$('#inputEmail').val('').focus();
+						return;
+					}
+                    $('#img-email').show();
+                    $('#email-check').hide();
+				}
+			});
+		});
+		//성별 선택
+		$('#input-gender-male').on('click',function(){
+		    $('#input-gender-female').css('background','#fff');
+		    $('#input-gender-female').css('color','black');
+		    $('#input-gender-male').css('background','orange');
+		    $('#input-gender-male').css('color','white');
+		    $('#gender-male').attr('checked',true);
+		});
+
+		$('#input-gender-female').on('click',function(){
+		    $('#input-gender-male').css('background','#fff');
+		    $('#input-gender-male').css('color','black');
+		    $('#input-gender-female').css('background','orange');
+		    $('#input-gender-female').css('color','white');
+		    $('#gender-female').attr('checked',true);
+		});
+	});
+</script>
+{% endblock%}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form class="form-signin" method="POST" action="/user/join">{%csrf_token%}
+                <h2 class="form-signin-heading">JOIN</h2>
+                <label for="inputName" class="sr-only">Name</label>
+                <input type="text" id="inputName" class="form-control" name="name" placeholder="Name" required autofocus>
+
+                <label for="inputEmail" class="sr-only">Email</label>
+                <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email" required autofocus>
+                <img id="img-email" src="/assets/images/check.png" style="display:none;">
+                <button class="btn btn-default" id="email-check" type="button">중복체크</button>
+
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="input-gender-male">
+                        <input type="radio" name="gender" value="male" id="gender-male">남자
+                    </span>
+                    <span class="input-group-addon" id="input-gender-female">
+                        <input type="radio" name="gender" value="female" id="gender-female">여자
+                    </span>
+                </div><!-- /input-group -->
+
+                <button class="btn btn-default" onclick="test()" type="submit">회원가입</button>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+{% endblock%}
+

@@ -1,0 +1,47 @@
+/*join success*/
+
+.row {
+    position:relative;
+}
+.col-md-8{
+    height:750px;
+    position:absolute;
+    top:50px;
+    left:16.5%;
+    background:url('http://localhost:9999/assets/images/joinsuccess-bg.jpg') no-repeat;
+    background-size:cover;
+}
+#accordion{
+    position:absolute;
+    top:300px;
+    left:225px;
+    width:500px;
+    line-height:500px;
+    border:none;
+}
+.panel-info{
+    border:none;
+}
+.panel-info div.panel-heading{
+    background:black;
+    border:none;
+    color:white;
+}
+#accordion-title{
+    margin-bottom:20px;
+    font-style:italic;
+    font-size:30px;
+    letter-spacing:1em;
+    text-align:center;
+    font-family:'Passion One', sans-serif;
+}
+#accordion-a{
+    text-align:center;
+}
+#accordion-a a{
+    color:white;
+    text-decoration:none;
+}
+#collapsesample1{
+    background:lightgray;
+}

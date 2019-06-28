@@ -7,11 +7,11 @@ from user.models import User
 
 # 회원가입 페이지 이동
 def joinform(request):
-    return render(request,'user/joinform.html')
+    return render(request,'_bs/user/joinform.html')
 
 # 가입 성공 시 페이지 이동
 def joinsuccess(request):
-    return render(request,'user/joinsuccess.html')
+    return render(request,'_bs/user/joinsuccess.html')
 
 # 회원가입
 def join(request):

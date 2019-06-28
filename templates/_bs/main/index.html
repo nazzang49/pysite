@@ -7,17 +7,15 @@
 <link href="http://localhost:9999/assets/css/bs/header.css" rel="stylesheet">
 <link href="http://localhost:9999/assets/css/bs/main.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Cutive+Mono|Rubik+Mono+One|Noto+Sans+KR|Lobster|Poiret+One|Passion+One&display=swap" rel="stylesheet">
-
-<style type="text/css">
-
-</style>
 {% endblock%}
 
 {% block content %}
         <!-- 로고 이미지 -->
         <div class="row">
-            <span>WEB PROGRAMMER</span><hr>
+            <span class="row-title">WEB PROGRAMMER</span><hr>
             <small>You can learn all the stuffs about Web Applications</small>
-            <button type="button" class="btn btn-default" onclick="location.href='/guestbook'">guestbook direct</button>
+            <button type="button" class="btn btn-default" onclick="location.href='/guestbook'">
+                <span class="glyphicon glyphicon-book"> </span>guestbook direct
+            </button>
         </div>
 {% endblock %}

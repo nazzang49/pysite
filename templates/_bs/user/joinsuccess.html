@@ -1,0 +1,36 @@
+{% extends '../../base.html' %}
+
+{% block css_link %}
+<!-- Bootstrap -->
+<link href="http://localhost:9999/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/font-nanumgothic.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/header.css" rel="stylesheet">
+<link href="http://localhost:9999/assets/css/bs/joinsuccess.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Cutive+Mono|Rubik+Mono+One|Noto+Sans+KR|Lobster|Poiret+One|Passion+One&display=swap" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="http://localhost:9999/assets/bootstrap/js/bootstrap.min.js"></script>
+{% endblock%}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="panel-group" id="accordion">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+                        <div id="accordion-title">WELCOME</div>
+                        <div id="accordion-a">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapsesample1">click here to get info.</a>
+                        </div>
+					</h4>
+				</div>
+				<div id="collapsesample1" class="panel-collapse collapse">
+					<div class="panel-body">내용</div>
+				</div>
+			</div>
+		</div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+{% endblock %}
